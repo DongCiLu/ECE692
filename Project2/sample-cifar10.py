@@ -126,6 +126,8 @@ if __name__ == '__main__':
     x_train, y_train = data[:split], label[:split]
     x_valid, y_valid = data[split:], label[split:]
 
+    print y_train[0:5]
+
     lr = 1e-4
     epochs = 200
     batch_size = 100
