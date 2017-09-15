@@ -127,7 +127,12 @@ if __name__ == '__main__':
     x_train, y_train = data[:split], label[:split]
     x_valid, y_valid = data[split:], label[split:]
 
-    self.lr = 1e-4
-    cnn = CNN()
+    lr = 1e-4
+    epochs = 200
+    batch_size = 100
+    input_size = [32, 32, 3]
+    n_class = 10
+
+    cnn = CNN(lr, epochs, batch_size, input_size, n_class)
     cnn.train(x_train, y_train)
     cnn.test_eval(x_test, y_test)
