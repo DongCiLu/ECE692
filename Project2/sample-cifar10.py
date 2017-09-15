@@ -47,16 +47,13 @@ class CNN(object):
         h_pool2 = self.max_pool_2x2(h_conv2)
 
         # densely/fully connected layer
-        fmap_size = [0, 0]
-        fmap_size[0] = \
-                (self.isize_dim[0] - int(self.kernal[0] / 2) * 2) / 2
-        fmap_size[1] = (fmap_size[0] - int(self.kernal[1] / 2) * 2) / 2
-        W_fc1 = self.weight_variable([fmap_size[1] * fmap_size[1] * 
+        fmap_size = self.isize_dim[0] / (2 ** len(self.feature))
+        W_fc1 = self.weight_variable([fmap_size * fmap_size * 
             self.feature[1], self.fc[0]])
         b_fc1 = self.bias_variable([self.fc[0]])
 
         h_pool2_flat = tf.reshape(h_pool2, \
-                [-1, fmap_size[1] * fmap_size[1] * self.feature[1]])
+                [-1, fmap_size * fmap_size * self.feature[1]])
         h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
         # dropout regularization
@@ -73,22 +70,6 @@ class CNN(object):
                 labels=self.y_, logits=self.y_conv))
         self.train_step = tf.train.AdamOptimizer(\
                 self.lr).minimize(cross_entropy)
-
-    def test(self, x_train, y_train):
-        self.sess = tf.Session()
-        init = tf.global_variables_initializer()
-        self.sess.run(init)
-        self.eval() # creating evaluation
-        train_size = x_train.shape[0]
-        for i in range(self.epochs):
-            start = (i * self.batch_size) % train_size
-            if start + self.batch_size > train_size:
-                continue
-            x_batch = x_train[start: start + self.batch_size]
-            y_batch = y_train[start: start + self.batch_size]
-            c1, p1, c2, p2 = self.sess.run([self.h_conv1, self.h_pool1, self.h_conv2, self.h_pool2\
-                    feed_dict={self.x: x_batch, self.y_: y_batch, \
-                    self.keep_prob: 0.5})
 
     def train(self, x_train, y_train):
         self.sess = tf.Session()
@@ -163,6 +144,5 @@ if __name__ == '__main__':
     n_class = 10
 
     cnn = CNN(lr, epochs, batch_size, input_size, n_class)
-    cnn.test(x_train, y_train)
-    # cnn.train(x_train, y_train)
-    # cnn.test_eval(x_test, y_test)
+    cnn.train(x_train, y_train)
+    cnn.test_eval(x_test, y_test)
