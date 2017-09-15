@@ -39,7 +39,7 @@ class CNN(object):
                 self.feature[0], self.feature[1]])
         b_conv2 = self.bias_variable([self.feature[1]])
         
-        x_image = tf.reshape(self.x, [-1, self.iszie_dim[0], \
+        x_image = tf.reshape(self.x, [-1, self.isize_dim[0], \
                 self.isize_dim[1], self.isize_dim[2]])
         h_conv1 = tf.nn.relu(self.conv2d(x_image, W_conv1) + b_conv1)
         h_pool1 = self.max_pool_2x2(h_conv1)
@@ -56,7 +56,7 @@ class CNN(object):
         b_fc1 = self.bias_variable([self.fc[0]])
 
         h_pool2_flat = tf.reshape(h_pool2, \
-                [-1, fmap_size[1] * fmap_szie[1] * self.feature[1]])
+                [-1, fmap_size[1] * fmap_size[1] * self.feature[1]])
         h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
         # dropout regularization
@@ -115,7 +115,6 @@ class CNN(object):
     def max_pool_2x2(self, x):
         return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                                 strides=[1, 2, 2, 1], padding='SAME')
-
 
 if __name__ == '__main__':
     filename = 'cifar-10-batches-py/data_batch_1'
