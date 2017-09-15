@@ -145,4 +145,4 @@ if __name__ == '__main__':
 
     cnn = CNN(lr, epochs, batch_size, input_size, n_class)
     cnn.train(x_train, y_train)
-    cnn.test_eval(x_test, y_test)
+    cnn.test_eval(x_valid, y_valid)
