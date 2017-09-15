@@ -11,8 +11,9 @@ and omits many desirable features.
 #### Libraries
 # Standard library
 import random
-import _pickle as cPickle
+import cPickle
 import gzip
+import sys
 
 # Third-party libraries
 import numpy as np
@@ -40,7 +41,7 @@ def load_data():
     That's done in the wrapper function ``load_data_wrapper()``, see
     below.
     """
-    f = gzip.open('mnist.pkl.gz', 'rb')
+    f = gzip.open('../mnist.pkl.gz', 'rb')
     training_data, validation_data, test_data = cPickle.load(f)
     f.close()
     return (training_data, validation_data, test_data)
@@ -129,11 +130,17 @@ class Network(object):
                 for k in xrange(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
+            print ".",
+            sys.stdout.flush()
+            '''
             if test_data:
                 print("Epoch {0}: {1} / {2}".format(
                     j, self.evaluate(test_data), n_test))
             else:
                 print("Epoch {0} complete".format(j))
+            '''
+        print "."
+        return float(self.evaluate(test_data)) / n_test
 
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
@@ -210,8 +217,36 @@ def sigmoid_prime(z):
     return sigmoid(z)*(1-sigmoid(z))
 
 if __name__ == '__main__':
-    print('Loading Data')
     training_data, validatation_data, test_data = load_data_wrapper()
-    net = Network([784, 30, 10])
-    print('Training Network')
-    net.SGD(training_data, 30, 10, 3.0, test_data=test_data)
+    image_size = 784
+    n_class = 10
+
+    # test different learning rate
+    for i in range(10):
+        eta = (i + 1) * 1.0
+        n_layers = 3
+        n_hidden_neurons = int((image_size * n_class) ** 0.5)
+        layers = [image_size] + [n_hidden_neurons] * (n_layers - 2) + [n_class]
+        net = Network(layers)
+        accuracy = net.SGD(training_data, 30, 10, eta, test_data=test_data)
+        print eta, n_layers, n_hidden_neurons, accuracy 
+    
+    # test different number of hidden layers
+    for i in range(5):
+        eta = 3.0
+        n_layers = 2 + i
+        n_hidden_neurons = int((image_size * n_class) ** 0.5)
+        layers = [image_size] + [n_hidden_neurons] * (n_layers - 2) + [n_class]
+        net = Network(layers)
+        accuracy = net.SGD(training_data, 30, 10, eta, test_data=test_data)
+        print eta, n_layers, n_hidden_neurons, accuracy 
+        
+    # test different number of neurons in hidden layers
+    for i in range(11):
+        eta = 3.0
+        n_layers = 3
+        n_hidden_neurons = int(image_size * 0.1 * i) + n_class
+        layers = [image_size] + [n_hidden_neurons] * (n_layers - 2) + [n_class]
+        net = Network(layers)
+        accuracy = net.SGD(training_data, 30, 10, eta, test_data=test_data)
+        print eta, n_layers, n_hidden_neurons, accuracy 
