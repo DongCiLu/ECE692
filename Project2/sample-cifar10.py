@@ -120,13 +120,19 @@ if __name__ == '__main__':
     filename = 'cifar-10-batches-py/data_batch_1'
     rawdata = unpickle(filename)
     data = rawdata['data']
-    label = np.reshape(np.array(rawdata['labels']), [data.shape[0], 1])
+    single_label = \
+            np.reshape(np.array(rawdata['labels']), [data.shape[0], 1])
+
+    label = []
+    for item in single_label:
+        temp_label = [0] * 10
+        temp_label[item] = 1
+        label.append(temp_label)
+    label = np.array(label)
 
     split = int(data.shape[0] * 0.8)
     x_train, y_train = data[:split], label[:split]
     x_valid, y_valid = data[split:], label[split:]
-
-    print y_train[0:5]
 
     lr = 1e-4
     epochs = 200
