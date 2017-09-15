@@ -74,6 +74,22 @@ class CNN(object):
         self.train_step = tf.train.AdamOptimizer(\
                 self.lr).minimize(cross_entropy)
 
+    def test(self, x_train, y_train):
+        self.sess = tf.Session()
+        init = tf.global_variables_initializer()
+        self.sess.run(init)
+        self.eval() # creating evaluation
+        train_size = x_train.shape[0]
+        for i in range(self.epochs):
+            start = (i * self.batch_size) % train_size
+            if start + self.batch_size > train_size:
+                continue
+            x_batch = x_train[start: start + self.batch_size]
+            y_batch = y_train[start: start + self.batch_size]
+            c1, p1, c2, p2 = self.sess.run([self.h_conv1, self.h_pool1, self.h_conv2, self.h_pool2\
+                    feed_dict={self.x: x_batch, self.y_: y_batch, \
+                    self.keep_prob: 0.5})
+
     def train(self, x_train, y_train):
         self.sess = tf.Session()
         init = tf.global_variables_initializer()
@@ -83,17 +99,23 @@ class CNN(object):
         for i in range(self.epochs):
             start = (i * self.batch_size) % train_size
             if start + self.batch_size > train_size:
-                start = 0
+                continue
             x_batch = x_train[start: start + self.batch_size]
             y_batch = y_train[start: start + self.batch_size]
             if i % 100 == 0:
-                train_acc = self.sess.run(self.accuracy,feed_dict={self.x: x_batch, self.y_: y_batch, self.keep_prob: 1.0})
+                train_acc = self.sess.run(self.accuracy, \
+                        feed_dict={self.x: x_batch, self.y_: y_batch, \
+                        self.keep_prob: 1.0})
                 print('step %d, training accuracy %g' % (i, train_acc))
-            self.sess.run([self.train_step], feed_dict={self.x: x_batch, self.y_: y_batch, self.keep_prob: 0.5})
+            self.sess.run([self.train_step], \
+                    feed_dict={self.x: x_batch, self.y_: y_batch, \
+                    self.keep_prob: 0.5})
         
     def eval(self):
-        correct_prediction = tf.equal(tf.argmax(self.y_conv, 1), tf.argmax(self.y_, 1))
-        self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+        correct_prediction = tf.equal(\
+                tf.argmax(self.y_conv, 1), tf.argmax(self.y_, 1))
+        self.accuracy = tf.reduce_mean(\
+                tf.cast(correct_prediction, tf.float32))
 
     def test_eval(self, x_test, y_test):
         self.eval()
@@ -141,5 +163,6 @@ if __name__ == '__main__':
     n_class = 10
 
     cnn = CNN(lr, epochs, batch_size, input_size, n_class)
-    cnn.train(x_train, y_train)
-    cnn.test_eval(x_test, y_test)
+    cnn.test(x_train, y_train)
+    # cnn.train(x_train, y_train)
+    # cnn.test_eval(x_test, y_test)
