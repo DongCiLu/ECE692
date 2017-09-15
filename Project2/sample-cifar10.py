@@ -126,7 +126,7 @@ if __name__ == '__main__':
     label = []
     for item in single_label:
         temp_label = [0] * 10
-        temp_label[item] = 1
+        temp_label[item[0]] = 1
         label.append(temp_label)
     label = np.array(label)
 
