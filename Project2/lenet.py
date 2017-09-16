@@ -154,7 +154,7 @@ if __name__ == '__main__':
     x_valid, y_valid = data[split:], label[split:]
 
     lr = 1e-4
-    epochs = 200
+    epochs = 100000
     batch_size = 128
     input_size = [32, 32, 3]
     n_class = 10
