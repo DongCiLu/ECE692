@@ -18,7 +18,7 @@ class RESNET(object):
 
     def restore_graph(self):
         self.saver = tf.train.import_meta_graph(self.graph_filename)
-        saver.restore(self.sess, \
+        self.saver.restore(self.sess, \
                 tf.train.latest_checkpoint(self.cp_filename))
         self.graph = tf.get_default_graph()
 
