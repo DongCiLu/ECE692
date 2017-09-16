@@ -22,7 +22,7 @@ class RESNET(object):
         self.saver.restore(self.sess, self.cp_filename)
         self.graph = tf.get_default_graph()
         self.writer = tf.summary.FileWriter(\
-                self.log_dirname, self.graph)
+                self.log_dirname, graph = tf.get_default_graph())
 
 if __name__ == '__main__':
     filename = 'cifar-10-batches-py/data_batch_1'
@@ -46,7 +46,7 @@ if __name__ == '__main__':
             'tensorflow-resnet-pretrained-20160509/ResNet-L50.meta'
     cp_filename = \
             'tensorflow-resnet-pretrained-20160509/ResNet-L50.ckpt'
-    log_dirname = 'tensorflow_log/'
+    log_dirname = 'tensorflow_log_resnet/'
 
 
     lr = 1e-4
