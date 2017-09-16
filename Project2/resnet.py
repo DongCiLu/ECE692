@@ -22,7 +22,7 @@ class RESNET(object):
         self.graph = tf.get_default_graph()
 
     def output_graph(self):
-        self.writer = tf.train.SummaryWriter('.', self.graph)
+        self.writer = tf.summary.FileWriter('.', self.graph)
         self.sess.run(self.writer)
 
 if __name__ == '__main__':
