@@ -23,8 +23,8 @@ class CNN(object):
         self.osize = n_class
 
         self.kernal = [5, 5]
-        self.feature = [6, 12]
-        self.fc = [1024]
+        self.feature = [6, 16]
+        self.fc = [120, 84]
 
         self.build_graph()
 
@@ -63,19 +63,27 @@ class CNN(object):
         self.keep_prob = tf.placeholder(tf.float32)
         h_fc1_drop = tf.nn.dropout(h_fc1, self.keep_prob)
 
-        # linear classifier
-        W_fc2 = self.weight_variable([self.fc[0], self.osize])
-        b_fc2 = self.bias_variable([self.osize])
+        W_fc2 = self.weight_variable(self.fc[0], self.fc[1]])
+        b_fc2 = self.bias_variable([self.fc[1]])
 
-        self.y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
+        h_fc2 = tf.nn.relu(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
+
+        # dropout regularization
+        h_fc2_drop = tf.nn.dropout(h_fc2, self.keep_prob)
+
+        # linear classifier
+        W_fc3 = self.weight_variable([self.fc[1], self.osize])
+        b_fc3 = self.bias_variable([self.osize])
+
+        self.y_conv = tf.matmul(h_fc2_drop, W_fc3) + b_fc3
         cross_entropy = tf.reduce_mean(\
                 tf.nn.softmax_cross_entropy_with_logits(\
                 labels=self.y_, logits=self.y_conv))
         self.train_step = tf.train.AdamOptimizer(\
                 self.lr).minimize(cross_entropy)
 
-        # self.writer = tf.summary.FileWriter(\
-                # self.log_dirname, tf.get_default_graph())
+        self.writer = tf.summary.FileWriter(\
+                self.log_dirname, tf.get_default_graph())
 
 
     def train(self, x_train, y_train):
@@ -83,8 +91,6 @@ class CNN(object):
         init = tf.global_variables_initializer()
         self.sess.run(init)
         self.eval() # creating evaluation
-        self.writer = tf.summary.FileWriter(\
-                self.log_dirname, tf.get_default_graph())
         train_size = x_train.shape[0]
         for i in range(self.epochs):
             start = (i * self.batch_size) % train_size
@@ -149,7 +155,7 @@ if __name__ == '__main__':
 
     lr = 1e-4
     epochs = 200
-    batch_size = 100
+    batch_size = 128
     input_size = [32, 32, 3]
     n_class = 10
 
