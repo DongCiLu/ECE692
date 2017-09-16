@@ -21,6 +21,10 @@ class RESNET(object):
         self.saver.restore(self.sess, self.cp_filename)
         self.graph = tf.get_default_graph()
 
+    def output_graph(self):
+        self.writer = tf.train.SummaryWriter('.', self.graph)
+        self.sess.run(self.writer)
+
 if __name__ == '__main__':
     filename = 'cifar-10-batches-py/data_batch_1'
     rawdata = unpickle(filename)
@@ -52,6 +56,7 @@ if __name__ == '__main__':
     n_class = 10
 
     resnet = RESNET(graph_filename, cp_filename)
+    resnet.output_graph()
 
     '''
     cnn = CNN(lr, epochs, batch_size, input_size, n_class)
