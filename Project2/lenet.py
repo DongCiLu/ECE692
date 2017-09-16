@@ -63,7 +63,7 @@ class CNN(object):
         self.keep_prob = tf.placeholder(tf.float32)
         h_fc1_drop = tf.nn.dropout(h_fc1, self.keep_prob)
 
-        W_fc2 = self.weight_variable(self.fc[0], self.fc[1])
+        W_fc2 = self.weight_variable([self.fc[0], self.fc[1]])
         b_fc2 = self.bias_variable([self.fc[1]])
 
         h_fc2 = tf.nn.relu(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
