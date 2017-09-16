@@ -9,9 +9,10 @@ def unpickle(filename):
     return data
 
 class RESNET(object):
-    def __init__(self, graph_filename, cp_filename):
+    def __init__(self, graph_filename, cp_filename, log_dirname):
         self.graph_filename = graph_filename
         self.cp_filename = cp_filename
+        self.log_dirname = log_dirname
         self.sess = tf.Session()
 
         self.restore_graph()
@@ -20,10 +21,8 @@ class RESNET(object):
         self.saver = tf.train.import_meta_graph(self.graph_filename)
         self.saver.restore(self.sess, self.cp_filename)
         self.graph = tf.get_default_graph()
-
-    def output_graph(self):
-        self.writer = tf.summary.FileWriter('.', self.graph)
-        self.sess.run(self.writer)
+        self.writer = tf.summary.FileWriter(\
+                self.log_dirname, self.graph)
 
 if __name__ == '__main__':
     filename = 'cifar-10-batches-py/data_batch_1'
@@ -47,6 +46,7 @@ if __name__ == '__main__':
             'tensorflow-resnet-pretrained-20160509/ResNet-L50.meta'
     cp_filename = \
             'tensorflow-resnet-pretrained-20160509/ResNet-L50.ckpt'
+    log_dirname = 'tensorflow_log/'
 
 
     lr = 1e-4
@@ -55,8 +55,7 @@ if __name__ == '__main__':
     input_size = [32, 32, 3]
     n_class = 10
 
-    resnet = RESNET(graph_filename, cp_filename)
-    resnet.output_graph()
+    resnet = RESNET(graph_filename, cp_filename, log_dirname)
 
     '''
     cnn = CNN(lr, epochs, batch_size, input_size, n_class)
