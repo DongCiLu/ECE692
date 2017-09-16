@@ -14,7 +14,7 @@ class RESNET(object):
         self.cp_filename = cp_filename
         self.sess = tf.Session()
 
-        restore_graph()
+        self.restore_graph()
 
     def restore_graph(self):
         self.saver = tf.train.import_meta_graph(self.graph_filename)
