@@ -24,6 +24,15 @@ class RESNET(object):
         self.writer = tf.summary.FileWriter(\
                 self.log_dirname, graph = tf.get_default_graph())
 
+    def train(self, x_train, y_train):
+        return
+
+    def eval(self, x_valid, y_valid):
+        return
+
+    def test(self, x_test, y_test):
+        return
+
 if __name__ == '__main__':
     filename = 'cifar-10-batches-py/data_batch_1'
     rawdata = unpickle(filename)

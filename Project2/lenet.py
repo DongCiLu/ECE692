@@ -74,8 +74,8 @@ class CNN(object):
         self.train_step = tf.train.AdamOptimizer(\
                 self.lr).minimize(cross_entropy)
 
-        self.writer = tf.summary.FileWriter(\
-                self.log_dirname, tf.get_default_graph())
+        # self.writer = tf.summary.FileWriter(\
+                # self.log_dirname, tf.get_default_graph())
 
 
     def train(self, x_train, y_train):
@@ -83,6 +83,8 @@ class CNN(object):
         init = tf.global_variables_initializer()
         self.sess.run(init)
         self.eval() # creating evaluation
+        self.writer = tf.summary.FileWriter(\
+                self.log_dirname, tf.get_default_graph())
         train_size = x_train.shape[0]
         for i in range(self.epochs):
             start = (i * self.batch_size) % train_size
