@@ -18,11 +18,8 @@ class RESNET(object):
 
     def restore_graph(self):
         self.saver = tf.train.import_meta_graph(self.graph_filename)
-        '''
-        self.saver.restore(self.sess, \
-                tf.train.latest_checkpoint(self.cp_filename))
-        self.graph = tf.get_default_graph()
-        '''
+        self.saver.restore(self.sess, self.cp_filename)
+        # self.graph = tf.get_default_graph()
 
 if __name__ == '__main__':
     filename = 'cifar-10-batches-py/data_batch_1'
