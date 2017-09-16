@@ -128,7 +128,7 @@ class CNN(object):
 
 if __name__ == '__main__':
     filename = 'cifar-10-batches-py/data_batch_1'
-    log_dirname = 'tensorflow_log_lanet/'
+    log_dirname = 'tensorflow_log_lenet/'
     rawdata = unpickle(filename)
     data = rawdata['data']
     single_label = \
