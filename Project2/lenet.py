@@ -153,7 +153,7 @@ if __name__ == '__main__':
     x_train, y_train = data[:split], label[:split]
     x_valid, y_valid = data[split:], label[split:]
 
-    lr = 1e-4
+    lr = 1e-5
     epochs = 100000
     batch_size = 128
     input_size = [32, 32, 3]
