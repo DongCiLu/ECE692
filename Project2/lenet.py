@@ -147,7 +147,7 @@ if __name__ == '__main__':
         data_i = rawdata['data']
         single_label_i = np.reshape(np.array(rawdata['labels']), \
                 [data_i.shape[0], 1])
-        if data_train == None:
+        if not data_train:
             data_train = data_i
             single_label_train = single_label_i
         else:
