@@ -137,24 +137,17 @@ class CNN(object):
 if __name__ == '__main__':
     log_dirname = 'tensorflow_log_lenet/'
     # load training data
-    # data_train = np.empty([0, 3072])
-    # single_label_train = np.empty([0, 1])
-    data_train = None
-    single_label_train = None
-    initialized = False
+    data_train = np.empty([0, 3072], dtype = int)
+    single_label_train = np.empty([0, 1], dtype = int)
     for i in range(1, 6):
         filename = 'cifar-10-batches-py/data_batch_{}'.format(i)
         rawdata = unpickle(filename)
         data_i = rawdata['data']
         single_label_i = np.reshape(np.array(rawdata['labels']), \
                 [data_i.shape[0], 1])
-        if not initialized:
-            data_train = data_i
-            single_label_train = single_label_i
-        else:
-            data_train = np.concatenate((data_train, data_i))
-            single_label_train = np.concatenate(\
-                    (single_label_train, single_label_i))
+        data_train = np.concatenate((data_train, data_i))
+        single_label_train = np.concatenate(\
+                (single_label_train, single_label_i))
     # load testing data
     filename = 'cifar-10-batches-py/test_batch'
     rawdata = unpickle(filename)
