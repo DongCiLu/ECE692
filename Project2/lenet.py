@@ -136,8 +136,8 @@ class CNN(object):
 
 if __name__ == '__main__':
     log_dirname = 'tensorflow_log_lenet/'
-    data = np.empty([0, 0])
-    single_label = np.empty([0, 0])
+    data = np.empty([0, 3072])
+    single_label = np.empty([0, 1])
     for i in range(1, 6):
         filename = 'cifar-10-batches-py/data_batch_{}'.format(i)
         rawdata = unpickle(filename)
