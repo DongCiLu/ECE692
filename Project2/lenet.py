@@ -135,12 +135,25 @@ class CNN(object):
                                 strides=[1, 2, 2, 1], padding='SAME')
 
 if __name__ == '__main__':
-    filename = 'cifar-10-batches-py/data_batch_1'
     log_dirname = 'tensorflow_log_lenet/'
-    rawdata = unpickle(filename)
-    data = rawdata['data']
-    single_label = \
-            np.reshape(np.array(rawdata['labels']), [data.shape[0], 1])
+    data = numpy_array([])
+    single_label = numpy_array([])
+    for i in range(1, 6):
+        filename = 'cifar-10-batches-py/data_batch_{}'.format(i)
+        rawdata = unpickle(filename)
+        data_i = rawdata['data']
+        single_label_i = np.reshape(np.array(rawdata['labels']), \
+                [data.shape[0], 1])
+        print data.shape
+        print data_i.shape
+        print single_label.shape
+        print single_label_i.shape
+        data = np.concatenate((data, data_i))
+        single_label = np.concatenate((single_label, single_label_i))
+        print '---------------'
+
+    print data.shape
+    print single_label.shape
 
     label = []
     for item in single_label:
@@ -153,7 +166,7 @@ if __name__ == '__main__':
     x_train, y_train = data[:split], label[:split]
     x_valid, y_valid = data[split:], label[split:]
 
-    lr = 1e-5
+    lr = 1e-3
     epochs = 100000
     batch_size = 128
     input_size = [32, 32, 3]
