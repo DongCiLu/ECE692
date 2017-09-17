@@ -141,13 +141,14 @@ if __name__ == '__main__':
     # single_label_train = np.empty([0, 1])
     data_train = None
     single_label_train = None
+    initialized = False
     for i in range(1, 6):
         filename = 'cifar-10-batches-py/data_batch_{}'.format(i)
         rawdata = unpickle(filename)
         data_i = rawdata['data']
         single_label_i = np.reshape(np.array(rawdata['labels']), \
                 [data_i.shape[0], 1])
-        if not data_train:
+        if not initialized:
             data_train = data_i
             single_label_train = single_label_i
         else:
