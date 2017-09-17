@@ -136,44 +136,51 @@ class CNN(object):
 
 if __name__ == '__main__':
     log_dirname = 'tensorflow_log_lenet/'
-    data = np.empty([0, 3072])
-    single_label = np.empty([0, 1])
+    # load training data
+    data_train = np.empty([0, 3072])
+    single_label_train = np.empty([0, 1])
     for i in range(1, 6):
         filename = 'cifar-10-batches-py/data_batch_{}'.format(i)
         rawdata = unpickle(filename)
         data_i = rawdata['data']
         single_label_i = np.reshape(np.array(rawdata['labels']), \
                 [data_i.shape[0], 1])
-        print data.shape
-        print data_i.shape
-        print single_label.shape
-        print single_label_i.shape
-        data = np.concatenate((data, data_i))
-        single_label = np.concatenate((single_label, single_label_i))
-        print '---------------'
+        data_train = np.concatenate((data_train, data_i))
+        single_label_train = np.concatenate(\
+                (single_label_train, single_label_i))
+    # load testing data
+    filename = 'cifar-10-batches-py/test_batch'
+    rawdata = unpickle(filename)
+    data_test = rawdata['data']
+    single_label_test = np.reshape(np.array(rawdata['labels']), \
+            [data_test.shape[0], 1])
 
-    print data.shape
-    print single_label.shape
-
-    exit()
-
-    label = []
-    for item in single_label:
+    label_train = []
+    for item in single_label_train:
         temp_label = [0] * 10
         temp_label[item[0]] = 1
-        label.append(temp_label)
-    label = np.array(label)
+        label_train.append(temp_label)
+    label_train = np.array(label_train)
 
-    split = int(data.shape[0] * 0.8)
-    x_train, y_train = data[:split], label[:split]
-    x_valid, y_valid = data[split:], label[split:]
+    label_test = []
+    for item in single_label_test:
+        temp_label = [0] * 10
+        temp_label[item[0]] = 1
+        label_test.append(temp_label)
+    label_test = np.array(label_test)
+
+    # split = int(data.shape[0] * 0.8)
+    # x_train, y_train = data[:split], label[:split]
+    # x_valid, y_valid = data[split:], label[split:]
+    x_train, y_train = data_train, label_train
+    x_test, y_test = data_test, label_test
 
     lr = 1e-3
-    epochs = 100000
+    epochs = 1000
     batch_size = 128
     input_size = [32, 32, 3]
     n_class = 10
 
     cnn = CNN(log_dirname, lr, epochs, batch_size, input_size, n_class)
     cnn.train(x_train, y_train)
-    cnn.test_eval(x_valid, y_valid)
+    cnn.test_eval(x_test, y_test)
