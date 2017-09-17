@@ -136,8 +136,8 @@ class CNN(object):
 
 if __name__ == '__main__':
     log_dirname = 'tensorflow_log_lenet/'
-    data = numpy_array([])
-    single_label = numpy_array([])
+    data = np.array([])
+    single_label = np.array([])
     for i in range(1, 6):
         filename = 'cifar-10-batches-py/data_batch_{}'.format(i)
         rawdata = unpickle(filename)
@@ -154,6 +154,8 @@ if __name__ == '__main__':
 
     print data.shape
     print single_label.shape
+
+    exit()
 
     label = []
     for item in single_label:
