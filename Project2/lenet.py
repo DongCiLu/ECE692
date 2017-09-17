@@ -143,7 +143,7 @@ if __name__ == '__main__':
         rawdata = unpickle(filename)
         data_i = rawdata['data']
         single_label_i = np.reshape(np.array(rawdata['labels']), \
-                [data.shape[0], 1])
+                [data_i.shape[0], 1])
         print data.shape
         print data_i.shape
         print single_label.shape
