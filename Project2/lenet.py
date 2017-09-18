@@ -85,7 +85,7 @@ if __name__ == '__main__':
     final_loss = slim.learning.train( \
             train_op, \
             logdir = train_dir, \
-            num_of_steps = epochs, \
+            number_of_steps = epochs, \
             save_summaries_secs = 1)
 
     print 'Finished_traing. Final batch loss {}'.format(final_loss)
