@@ -4,13 +4,13 @@ import numpy as np
 
 slim = tf.contrib.slim
 
-def load_batch(dataset, batch_size):
+def load_batch(dataset, batch_size, epochs):
     provider = slim.dataset_data_provider.DatasetDataProvider(dataset)
     [image, label] = provider.get(['image', 'label'])
     images, labels = tf.train.batch(\
             [image, label], \
             batch_size = batch_size, \
-            capacity = 2 * batch_size)
+            capacity = epochs * batch_size)
     images = tf.to_float(images)
     return images, labels
 
@@ -64,7 +64,8 @@ if __name__ == '__main__':
 
     # load training data
     dataset = cifar10.get_split('train', data_dirname)
-    images, labels = load_batch(dataset, batch_size = batch_size)
+    images, labels = load_batch(dataset, \
+            batch_size = batch_size, epochs = epochs)
 
     # define the loss
     logits, end_points = leNet(images, \
