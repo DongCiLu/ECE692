@@ -4,35 +4,68 @@ import cPickle
 import tensorflow as tf
 import numpy as np
 
+slim = tf.contrib.slim
+
 def unpickle(filename):
     with open(filename, 'rb') as f:
         data = cPickle.load(f)
     return data
 
-class CNN(object):
-    def __init__(self, log_dirname, lr, epochs, \
-            batch_size, input_size, n_class):
+class Lenet(object):
+    def __init__(self, log_dirname, lr):
         self.log_dirname = log_dirname
-
         self.lr = lr
-        self.epochs = epochs
-        self.batch_size = batch_size
-
-        self.isize_dim = input_size
-        self.isize = input_size[0] * input_size[1] * input_size[2]
-        self.osize = n_class
 
         self.kernal = [5, 5]
         self.feature = [6, 16]
-        self.fc = [120, 84]
+        self.pool = [2, 2]
+        self.fc = [1024]
 
-        self.build_graph()
+    def network(self, images, n_class=10, \
+            is_training=False, scope='LeNet'):
+        end_points = {}
+        with tf.variable_scope(scope, 'LeNet', [images, n_class]):
+            # first convolution layer
+            self.net = slim.conv2d(image, self.feature[0], \
+                    [self.kernal[0], self.kernal[0]], scope='conv1')
+            self.net = slim.max_pool2d(self.net, \
+                    [self.pool[0], self.pool[0]], scope='pool1')
+            # second convolution layer
+            self.net = slim.conv2d(self.net, self.feature[1], \
+                    [self.kernal[1], self.kernal[1]], scope='conv2')
+            self.net = slim.max_pool2d(self.net, \
+                    [self.pool[1], self.pool[1]], scope='pool2')
+            # flatten output from convolutional layer
+            self.net = slim.flatten(self.net)
+            self.end_points['Flatten'] = self.net
+            # first fully connected layer
+            self.net = slim.fully_connected(self.net, \
+                    self.fc[0], scope='fc3')
+            # dropout regulation for fully connected layer
+            dropuot_keep_prob = 0.5
+            self.net = slim.dropout(net, dropout_keep_prob, \
+                    is_training=is_training, scope='dropout3')
+            # output fully connected layer
+            logits = slim.fully_connected(self.net, n_class, \
+                    activation_fn=None, scope='fc4')
 
-    def build_graph(self):
+            end_points['Logits'] = self.logits 
+            predictions = tf.argmax(logits, 1)
+            end_points['Predictions'] = predictions
+
+            return predictions, end_points
+            
+
+
+
+
+
+
         self.x = tf.placeholder(tf.float32, shape=[None, self.isize])
         self.y_ = tf.placeholder(tf.float32, shape=[None, self.osize])
         
         # define conv-layer variables
+        net = slim.conv2d(images, 
         W_conv1 = self.weight_variable(\
                 [self.kernal[0], self.kernal[0], \
                 self.isize_dim[2], self.feature[0]])    
@@ -138,36 +171,22 @@ if __name__ == '__main__':
     log_dirname = 'tensorflow_log_lenet/'
     # load training data
     data_train = np.empty([0, 3072], dtype = int)
-    single_label_train = np.empty([0, 1], dtype = int)
+    label_train = np.empty([0, 1], dtype = int)
     for i in range(1, 6):
         filename = 'cifar-10-batches-py/data_batch_{}'.format(i)
         rawdata = unpickle(filename)
         data_i = rawdata['data']
-        single_label_i = np.reshape(np.array(rawdata['labels']), \
+        label_i = np.reshape(np.array(rawdata['labels']), \
                 [data_i.shape[0], 1])
         data_train = np.concatenate((data_train, data_i))
-        single_label_train = np.concatenate(\
-                (single_label_train, single_label_i))
+        label_train = np.concatenate(\
+                (label_train, single_label_i))
     # load testing data
     filename = 'cifar-10-batches-py/test_batch'
     rawdata = unpickle(filename)
     data_test = rawdata['data']
-    single_label_test = np.reshape(np.array(rawdata['labels']), \
+    label_test = np.reshape(np.array(rawdata['labels']), \
             [data_test.shape[0], 1])
-
-    label_train = []
-    for item in single_label_train:
-        temp_label = [0] * 10
-        temp_label[item[0]] = 1
-        label_train.append(temp_label)
-    label_train = np.array(label_train)
-
-    label_test = []
-    for item in single_label_test:
-        temp_label = [0] * 10
-        temp_label[item[0]] = 1
-        label_test.append(temp_label)
-    label_test = np.array(label_test)
 
     # split = int(data.shape[0] * 0.8)
     # x_train, y_train = data[:split], label[:split]
