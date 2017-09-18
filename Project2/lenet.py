@@ -57,7 +57,7 @@ def leNet(images, n_class=10, \
 
 if __name__ == '__main__':
     train_dir = 'tensorflow_log_lenet'
-    data_dirname = 'datasets'
+    data_dirname = 'cifar10'
     lr = 0.01
     epochs = 1
     batch_size = 128
