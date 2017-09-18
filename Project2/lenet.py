@@ -10,7 +10,7 @@ def load_batch(dataset, batch_size, epochs):
     images, labels = tf.train.batch(\
             [image, label], \
             batch_size = batch_size, \
-            capacity = epochs * batch_size)
+            capacity = 2 * batch_size)
     images = tf.to_float(images)
     return images, labels
 
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     train_dir = './tensorflow_log_lenet/'
     data_dirname = './datasets'
     lr = 0.01
-    epochs = 1000
+    epochs = 1
     batch_size = 128
 
     # load training data
