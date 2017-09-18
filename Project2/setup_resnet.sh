@@ -11,4 +11,15 @@ git clone https://github.com/tensorflow/models.git
 cd models
 bazel build -c opt --config=cuda resnet/...
 
+bazel-bin/resnet/resnet_main --train_data_path=cifar10/data_batch* \
+                               --log_root=/tmp/resnet_model \
+                               --train_dir=/tmp/resnet_model/train \
+                               --dataset='cifar10' \
+                               --num_gpus=2
 
+# bazel-bin/resnet/resnet_main --eval_data_path=cifar10/test_batch.bin \
+#                               --log_root=/tmp/resnet_model \
+#                               --eval_dir=/tmp/resnet_model/test \
+#                               --mode=eval \
+#                               --dataset='cifar10' \
+#                               --num_gpus=2
