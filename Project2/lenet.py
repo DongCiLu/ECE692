@@ -71,7 +71,7 @@ if __name__ == '__main__':
             n_class = dataset.num_classes, \
             is_training = True)
     one_hot_labels = slim.one_hot_encoding(labels, dataset.num_classes)
-    slim.losses.sofrmax_cross_entropy(logits, one_hot_labels)
+    slim.losses.softmax_cross_entropy(logits, one_hot_labels)
     total_loss = slim.losses.get_total_loss()
 
     # monitor the total loss
