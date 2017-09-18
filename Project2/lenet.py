@@ -1,5 +1,5 @@
 import tensorflow as tf
-from models.slim.datasets import cifar10
+from slimdatasets import cifar10
 import numpy as np
 
 slim = tf.contrib.slim
