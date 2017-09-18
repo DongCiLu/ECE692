@@ -21,6 +21,7 @@ def leNet(images, n_class=10, \
     feature = [6, 16]
     pool = [2, 2]
     fc = [1024]
+    dropout_keep_prob = 0.5
 
     end_points = {}
     with tf.variable_scope(scope, 'LeNet', [images, n_class]):
