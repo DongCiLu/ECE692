@@ -85,7 +85,7 @@ if __name__ == '__main__':
     log_dirname = 'tensorflow_log_lenet/'
     data_dirname = './datasets'
     # load training data
-    dataset = cifar10.get_split('validation', data_dirname)
+    dataset = cifar10.get_split('train', data_dirname)
     provider = slim.dataset_data_provider.DatasetDataProvider(dataset)
     [image, label] = provider.get(['image', 'label'])
 
