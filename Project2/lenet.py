@@ -24,7 +24,7 @@ def leNet(images, n_class=10, \
     end_points = {}
     with tf.variable_scope(scope, 'LeNet', [images, n_class]):
         # first convolution layer
-        net = slim.conv2d(image, feature[0], \
+        net = slim.conv2d(images, feature[0], \
                 [kernal[0], kernal[0]], scope='conv1')
         net = slim.max_pool2d(net, \
                 [pool[0], pool[0]], scope='pool1')
