@@ -59,7 +59,7 @@ if __name__ == '__main__':
     train_dir = 'tensorflow_log_lenet'
     data_dirname = 'cifar10'
     lr = 0.01
-    epochs = 1
+    epochs = 100000
     batch_size = 128
 
     with tf.Graph().as_default():
