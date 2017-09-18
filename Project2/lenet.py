@@ -56,8 +56,8 @@ def leNet(images, n_class=10, \
         return logits, end_points
 
 if __name__ == '__main__':
-    train_dir = './tensorflow_log_lenet/'
-    data_dirname = './datasets'
+    train_dir = 'tensorflow_log_lenet'
+    data_dirname = 'datasets'
     lr = 0.01
     epochs = 1
     batch_size = 128
@@ -81,17 +81,13 @@ if __name__ == '__main__':
     # specify the optimizer and create the train op
     optimizer = tf.train.AdamOptimizer(learning_rate = lr)
     train_op = slim.learning.create_train_op(total_loss, optimizer)
-    init_op = tf.global_variables_initializer()
-    local_init_op = tf.local_variables_initializer()
 
     # run the training
     final_loss = slim.learning.train( \
             train_op, \
             logdir = train_dir, \
             number_of_steps = epochs, \
-            save_summaries_secs = 1, \
-            init_op = init_op, \
-            local_init_op = local_init_op)
+            save_summaries_secs = 1)
 
     print 'Finished_traing. Final batch loss {}'.format(final_loss)
 
