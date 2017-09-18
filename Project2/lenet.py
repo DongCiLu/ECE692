@@ -11,6 +11,7 @@ def load_batch(dataset, batch_size):
             [image, label], \
             batch_size = batch_size, \
             capacity = 2 * batch_size)
+    images = tf.to_float(images)
     return images, labels
 
 def leNet(images, n_class=10, \
