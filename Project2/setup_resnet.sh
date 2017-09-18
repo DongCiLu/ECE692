@@ -5,10 +5,13 @@ echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | 
 curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 sudo apt-get update && sudo apt-get install bazel
 
-curl -o cifar-10-binary.tar.gz https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz
-
 git clone https://github.com/tensorflow/models.git
 cd models
+
+curl -o cifar-10-binary.tar.gz https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz
+tar xzvg cifar-10-binary.tar.gz
+mv cifar-10-binary cifar-10
+
 bazel build -c opt --config=cuda resnet/...
 
 bazel-bin/resnet/resnet_main --train_data_path=cifar10/data_batch* \
