@@ -62,32 +62,33 @@ if __name__ == '__main__':
     epochs = 1
     batch_size = 128
 
-    # load training data
-    dataset = cifar10.get_split('train', data_dirname)
-    images, labels = load_batch(dataset, \
-            batch_size = batch_size, epochs = epochs)
+    with tf.Graph().as_default():
+        # load training data
+        dataset = cifar10.get_split('train', data_dirname)
+        images, labels = load_batch(dataset, \
+                batch_size = batch_size, epochs = epochs)
 
-    # define the loss
-    logits, end_points = leNet(images, \
-            n_class = dataset.num_classes, \
-            is_training = True)
-    one_hot_labels = slim.one_hot_encoding(labels, dataset.num_classes)
-    slim.losses.softmax_cross_entropy(logits, one_hot_labels)
-    total_loss = slim.losses.get_total_loss()
+        # define the loss
+        logits, end_points = leNet(images, \
+                n_class = dataset.num_classes, \
+                is_training = True)
+        one_hot_labels = \
+                slim.one_hot_encoding(labels, dataset.num_classes)
+        slim.losses.softmax_cross_entropy(logits, one_hot_labels)
+        total_loss = slim.losses.get_total_loss()
 
-    # monitor the total loss
-    tf.summary.scalar('losses/Total Loss', total_loss)
+        # monitor the total loss
+        tf.summary.scalar('losses/Total Loss', total_loss)
 
-    # specify the optimizer and create the train op
-    optimizer = tf.train.AdamOptimizer(learning_rate = lr)
-    train_op = slim.learning.create_train_op(total_loss, optimizer)
+        # specify the optimizer and create the train op
+        optimizer = tf.train.AdamOptimizer(learning_rate = lr)
+        train_op = slim.learning.create_train_op(total_loss, optimizer)
 
-    # run the training
-    final_loss = slim.learning.train( \
-            train_op, \
-            logdir = train_dir, \
-            number_of_steps = epochs, \
-            save_summaries_secs = 1)
+        # run the training
+        final_loss = slim.learning.train( \
+                train_op, \
+                logdir = train_dir, \
+                number_of_steps = epochs, \
+                save_summaries_secs = 1)
 
-    print 'Finished_traing. Final batch loss {}'.format(final_loss)
-
+        print 'Finished_traing. Final batch loss {}'.format(final_loss)
