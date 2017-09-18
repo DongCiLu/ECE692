@@ -54,7 +54,7 @@ def leNet(images, n_class=10, \
         return logits, end_points
 
 if __name__ == '__main__':
-    train_dir = './lenet_log/'
+    train_dir = './tensorflow_log_lenet/'
     data_dirname = './datasets'
     lr = 0.01
     epochs = 1000
