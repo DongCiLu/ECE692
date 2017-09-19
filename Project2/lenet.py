@@ -59,7 +59,7 @@ if __name__ == '__main__':
     train_dir = 'tensorflow_log_lenet'
     data_dirname = 'cifar10'
     lr = 0.01
-    epochs = 100000
+    epochs = 1000
     batch_size = 128
 
     with tf.Graph().as_default():
@@ -76,9 +76,12 @@ if __name__ == '__main__':
                 slim.one_hot_encoding(labels, dataset.num_classes)
         slim.losses.softmax_cross_entropy(logits, one_hot_labels)
         total_loss = slim.losses.get_total_loss()
+        accuracy = slim.metrics.accuracy(\
+                end_points['Predictions'], labels)
 
         # monitor the total loss
         tf.summary.scalar('losses/Total Loss', total_loss)
+        tf.summary.scalar('accuracy', accuracy)
 
         # specify the optimizer and create the train op
         optimizer = tf.train.AdamOptimizer(learning_rate = lr)
