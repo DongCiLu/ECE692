@@ -20,14 +20,14 @@ bazel build -c opt --config=cuda resnet/...
 
 cd ../
 models/bazel-bin/resnet/resnet_main \
-                               --train_data_path=cifar10/data_batch* \
+                               --train_data_path=models/cifar10/data_batch* \
                                --log_root=/tmp/resnet_model \
                                --train_dir=/tmp/resnet_model/train \
                                --dataset='cifar10' \
                                --num_gpus=1
 
 # models/bazel-bin/resnet/resnet_main 
-                               # --eval_data_path=cifar10/test_batch.bin\
+                               # --eval_data_path=models/cifar10/test_batch.bin\
                                # --log_root=/tmp/resnet_model \
                                # --eval_dir=/tmp/resnet_model/test \
                                # --mode=eval \
