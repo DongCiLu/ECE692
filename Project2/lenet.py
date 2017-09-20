@@ -4,7 +4,7 @@ import numpy as np
 
 slim = tf.contrib.slim
 
-def load_batch(dataset, batch_size, epochs):
+def load_batch(dataset, batch_size):
     provider = slim.dataset_data_provider.DatasetDataProvider(dataset)
     [image, label] = provider.get(['image', 'label'])
     images, labels = tf.train.batch(\
@@ -66,7 +66,7 @@ if __name__ == '__main__':
         # load training data
         dataset = cifar10.get_split('train', data_dirname)
         images, labels = load_batch(dataset, \
-                batch_size = batch_size, epochs = epochs)
+                batch_size = batch_size)
 
         # define the loss
         logits, end_points = leNet(images, \

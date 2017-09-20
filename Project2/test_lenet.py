@@ -2,7 +2,7 @@ import tensorflow as tf
 from datasets import cifar10
 slim = tf.contrib.slim
 
-def load_batch(dataset, batch_size, epochs):
+def load_batch(dataset, batch_size):
     provider = slim.dataset_data_provider.DatasetDataProvider(dataset)
     [image, label] = provider.get(['image', 'label'])
     images, labels = tf.train.batch(\
@@ -16,13 +16,15 @@ with tf.Graph().as_default():
     train_dir = 'tensorflow_log_lenet'
     data_dirname = 'cifar10'
 
+    batch_size = 128
+
     dataset = cifar10.get_split('test', data_dirname)
     images, labels = load_batch(dataset, \
             batch_size = batch_size, epochs = epochs)
 
     logits, end_points = leNet(images, \
             n_class = dataset.num_classes, \
-            is_training = True)
+            is_training = False)
     predictions = end_points['Predictions']
 
     names_to_values, names_to_updates = \
