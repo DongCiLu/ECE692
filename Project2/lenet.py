@@ -116,9 +116,9 @@ if __name__ == '__main__':
 
         names_to_values, names_to_updates = \
                 slim.metrics.aggregate_metric_map({ \
-                'eval/Accuracy': slim.metrics.streaming_accuracy(\
+                'eval/Accuracy': slim.metrics.accuracy(\
                 predictions, labels), \
-                'eval/Recall@5': slim.metrics.streaming_recall_at_k(\
+                'eval/Recall@5': slim.metrics.recall_at_k(\
                 logits, labels, 5)})
 
         print 'Running evaluation loop ...'
