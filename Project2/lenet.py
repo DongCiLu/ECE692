@@ -1,6 +1,7 @@
 import tensorflow as tf
 from datasets import cifar10
 import numpy as np
+import argparse
 
 slim = tf.contrib.slim
 
@@ -62,7 +63,10 @@ if __name__ == '__main__':
     epochs = 1000
     batch_size = 128
 
-    mode = 'test'
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument('mode', type=str)
+    args = arg_parser.parse_args()
+    mode = args.mode
 
     if mode == 'train':
         with tf.Graph().as_default():
@@ -100,7 +104,7 @@ if __name__ == '__main__':
 
             print 'Finished_traing. Final batch loss {}'.format(\
                     final_loss)
-    else:
+    elif mode == 'test':
         dataset = cifar10.get_split('test', data_dirname)
         images, labels = load_batch(dataset, \
                 batch_size = batch_size)
@@ -119,16 +123,19 @@ if __name__ == '__main__':
 
         print 'Running evaluation loop ...'
         checkpoint_path = tf.train.latest_checkpoint(train_dir)
-        metric_values = slim.evaluation.evaluate_once(\
+        metric_values = slim.evaluation.evaluate_loop(\
                 master = '', \
                 checkpoint_path = checkpoint_path, \
                 logdir = train_dir, \
                 eval_op = names_to_updates.values(), \
-                final_op = names_to_values.values())
+                final_op = names_to_values.values(), 
+                eval_interval_secs = 10)
 
         names_to_values = \
                 dict(zip(names_to_values.keys(), metric_values))
         for name in names_to_values:
             print '{}: {}'.format(name, names_to_values[name])
 
+    else: 
+        print 'Wrong running mode. Must be train or test.'
 
