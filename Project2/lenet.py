@@ -122,10 +122,10 @@ if __name__ == '__main__':
                 logits, labels, 5)})
 
         print 'Running evaluation loop ...'
-        checkpoint_path = tf.train.latest_checkpoint(train_dir)
+        # checkpoint_path = tf.train.latest_checkpoint(train_dir)
         metric_values = slim.evaluation.evaluation_loop(\
                 master = '', \
-                checkpoint_path = checkpoint_path, \
+                checkpoint_dir = train_dir, \
                 logdir = train_dir, \
                 eval_op = names_to_updates.values(), \
                 final_op = names_to_values.values(), 
