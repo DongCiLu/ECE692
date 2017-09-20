@@ -83,17 +83,19 @@ if __name__ == '__main__':
                 batch_size = batch_size)
 
         # define the loss
-        logits_train, end_points_train = leNet(images_train, \
-                n_class = dataset_train.num_classes, \
-                is_training = True)
-        one_hot_labels_train = slim.one_hot_encoding(\
-                labels_train, dataset_train.num_classes)
-        slim.losses.softmax_cross_entropy(\
-                logits_train, one_hot_labels_train)
-        total_loss = slim.losses.get_total_loss()
-        logits_test, end_points_test = leNet(images_test, \
-                n_class = dataset_test.num_classes, \
-                is_training = False)
+        with tf.variabl_scope('LeNet') as scope:
+            logits_train, end_points_train = leNet(images_train, \
+                    n_class = dataset_train.num_classes, \
+                    is_training = True)
+            one_hot_labels_train = slim.one_hot_encoding(\
+                    labels_train, dataset_train.num_classes)
+            slim.losses.softmax_cross_entropy(\
+                    logits_train, one_hot_labels_train)
+            total_loss = slim.losses.get_total_loss()
+            scope.reuse_variables()
+            logits_test, end_points_test = leNet(images_test, \
+                    n_class = dataset_test.num_classes, \
+                    is_training = False)
 
         # specify the optimizer and create the train op
         optimizer = tf.train.AdamOptimizer(learning_rate = lr)
