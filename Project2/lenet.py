@@ -83,7 +83,7 @@ if __name__ == '__main__':
                 batch_size = batch_size)
 
         # define the loss
-        with tf.variabl_scope('LeNet') as scope:
+        with tf.variable_scope('LeNet') as scope:
             logits_train, end_points_train = leNet(images_train, \
                     n_class = dataset_train.num_classes, \
                     is_training = True)
