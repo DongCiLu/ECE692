@@ -127,7 +127,7 @@ if __name__ == '__main__':
                 final_op = names_to_values.values())
 
         names_to_values = \
-                dict(zip(name_to_values.keys(), metric_values))
+                dict(zip(names_to_values.keys(), metric_values))
         for name in names_to_values:
             print '{}: {}'.format(name, names_to_values[name])
 
