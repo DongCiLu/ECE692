@@ -19,17 +19,6 @@ mv cifar-10-batches-bin cifar10
 bazel build -c opt --config=cuda resnet/...
 
 cd ../
-models/bazel-bin/resnet/resnet_main \
-                               --train_data_path=models/cifar10/data_batch* \
-                               --log_root=/tmp/resnet_model \
-                               --train_dir=/tmp/resnet_model/train \
-                               --dataset='cifar10' \
-                               --num_gpus=1 > log_resnet_train 2>&1 &
+models/bazel-bin/resnet/resnet_main --train_data_path=models/cifar10/data_batch* --log_root=/tmp/resnet_model --train_dir=/tmp/resnet_model/train --dataset='cifar10' --num_gpus=1 > log_resnet_train 2>&1 &
 
-models/bazel-bin/resnet/resnet_main 
-                               --eval_data_path=models/cifar10/test_batch.bin\
-                               --log_root=/tmp/resnet_model \
-                               --eval_dir=/tmp/resnet_model/test \
-                               --mode=eval \
-                               --dataset='cifar10' \
-                               --num_gpus=0 > log_resnet_test 2>&1 &
+models/bazel-bin/resnet/resnet_main --eval_data_path=models/cifar10/test_batch.bin --log_root=/tmp/resnet_model --eval_dir=/tmp/resnet_model/test --mode=eval --dataset='cifar10' --num_gpus=0 > log_resnet_test 2>&1 &
