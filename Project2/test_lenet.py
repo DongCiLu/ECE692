@@ -1,4 +1,6 @@
+import tensorflow as tf
 from datasets import cifar10
+slim = tf.contrib.slim
 
 with tf.Graph().as_default():
     train_dir = 'tensorflow_log_lenet'
@@ -31,5 +33,5 @@ with tf.Graph().as_default():
 
     names_to_values = dict(zip(name_to_values.keys(), metric_values))
     for name in names_to_values:
-        print ('{}: {}'.format(name, names_to_values[name])
+        print '{}: {}'.format(name, names_to_values[name])
 
