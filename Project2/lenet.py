@@ -1,7 +1,6 @@
 import tensorflow as tf
 from datasets import cifar10
 import numpy as np
-import argparse
 from tensorflow.contrib.slim.python.slim.learning import train_step
 
 slim = tf.contrib.slim
@@ -60,7 +59,7 @@ def leNet(images, n_class=10, \
 def train_step_fn(session, *args, **kwargs):
     total_loss, should_stop = train_step(session, *args, **kwargs)
 
-    if train_step_fn.step % train_step_fn.test == 0:
+    if train_step_fn.step % train_step_fn.test_step == 0:
         session.run(train_step_fn.accuracy_test)
 
     train_step_fn.step += 1
@@ -73,11 +72,6 @@ if __name__ == '__main__':
     lr = 0.0001
     epochs = 1000
     batch_size = 128
-
-    arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument('mode', type=str)
-    args = arg_parser.parse_args()
-    mode = args.mode
 
     with tf.Graph().as_default():
         # load training data
@@ -116,6 +110,7 @@ if __name__ == '__main__':
         tf.summary.scalar('accuracy/test_accuracy', accuracy_test)
 
         train_step_fn.step = 0
+        train_step_fn.test_step = 100
         train_step_fn.accuracy_test = accuracy_test
 
         # run the training
