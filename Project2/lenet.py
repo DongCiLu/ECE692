@@ -133,8 +133,7 @@ if __name__ == '__main__':
                 logdir = train_dir, \
                 num_evals = num_evals, \
                 eval_op = names_to_updates.values(), \
-                summary_op = tf.contrib,deprecated.merge_summary(\
-                summary_ops), \
+                summary_op = tf.contrib,deprecated.merge_summary(summary_ops), \
                 final_op = names_to_values.values(), \
                 max_number_of_evaluations = eval_steps, \
                 eval_interval_secs = 10)
