@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
         print 'Running evaluation loop ...'
         checkpoint_path = tf.train.latest_checkpoint(train_dir)
-        metric_values = slim.evalution.evaluate_once(\
+        metric_values = slim.evaluation.evaluate_once(\
                 master = '', \
                 checkpoint_path = checkpoint_path, \
                 logdir = train_dir, \
