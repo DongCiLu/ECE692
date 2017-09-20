@@ -2,6 +2,16 @@ import tensorflow as tf
 from datasets import cifar10
 slim = tf.contrib.slim
 
+def load_batch(dataset, batch_size, epochs):
+    provider = slim.dataset_data_provider.DatasetDataProvider(dataset)
+    [image, label] = provider.get(['image', 'label'])
+    images, labels = tf.train.batch(\
+            [image, label], \
+            batch_size = batch_size, \
+            capacity = 2 * batch_size)
+    images = tf.to_float(images)
+    return images, labels
+
 with tf.Graph().as_default():
     train_dir = 'tensorflow_log_lenet'
     data_dirname = 'cifar10'
