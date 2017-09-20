@@ -2,6 +2,7 @@ import tensorflow as tf
 from datasets import cifar10
 import numpy as np
 import argparse
+from tensorflow.contrib.slim.python.slim.learning import train_step
 
 slim = tf.contrib.slim
 
@@ -56,6 +57,16 @@ def leNet(images, n_class=10, \
 
         return logits, end_points
 
+def train_step_fn(session, *args, **kwargs):
+    total_loss, should_stop = train_step(session, *args, **kwargs)
+
+    if train_step_fn.step % train_step_fn.test == 0:
+        session.run(train_step_fn.accuracy_test)
+
+    train_step_fn.step += 1
+
+    return [total_loss, should_stop]
+
 if __name__ == '__main__':
     train_dir = 'tensorflow_log_lenet'
     data_dirname = 'cifar10'
@@ -68,81 +79,49 @@ if __name__ == '__main__':
     args = arg_parser.parse_args()
     mode = args.mode
 
-    if mode == 'train':
-        with tf.Graph().as_default():
-            # load training data
-            dataset = cifar10.get_split('train', data_dirname)
-            images, labels = load_batch(dataset, \
+    with tf.Graph().as_default():
+        # load training data
+        dataset_train = cifar10.get_split('train', data_dirname)
+        images_train, labels_train = load_batch(dataset_train, \
                     batch_size = batch_size)
-
-            # define the loss
-            logits, end_points = leNet(images, \
-                    n_class = dataset.num_classes, \
-                    is_training = True)
-            one_hot_labels = \
-                    slim.one_hot_encoding(labels, dataset.num_classes)
-            slim.losses.softmax_cross_entropy(logits, one_hot_labels)
-            total_loss = slim.losses.get_total_loss()
-            accuracy = slim.metrics.accuracy(\
-                    end_points['Predictions'], labels)
-
-            # monitor the total loss
-            tf.summary.scalar('losses/Total Loss', total_loss)
-            tf.summary.scalar('accuracy', accuracy)
-
-            # specify the optimizer and create the train op
-            optimizer = tf.train.AdamOptimizer(learning_rate = lr)
-            train_op = slim.learning.create_train_op(\
-                    total_loss, optimizer)
-
-            # run the training
-            final_loss = slim.learning.train( \
-                    train_op, \
-                    logdir = train_dir, \
-                    number_of_steps = epochs, \
-                    save_summaries_secs = 1)
-
-            print 'Finished_traing. Final batch loss {}'.format(\
-                    final_loss)
-    elif mode == 'test':
-        dataset = cifar10.get_split('test', data_dirname)
-        images, labels = load_batch(dataset, \
+        dataset_test = cifar10.get_split('test', data_dirname)
+        images_test, labels_test = load_batch(dataset_test, \
                 batch_size = batch_size)
 
-        logits, end_points = leNet(images, \
+        # define the loss
+        logits_train, end_points_train = leNet(images_train, \
+                n_class = dataset.num_classes, \
+                is_training = True)
+        one_hot_labels_train = slim.one_hot_encoding(\
+                labels_train, dataset.num_classes)
+        slim.losses.softmax_cross_entropy(\
+                logits_train, one_hot_labels_train)
+        total_loss = slim.losses.get_total_loss()
+        logits_test, end_points_test = leNet(images_test, \
                 n_class = dataset.num_classes, \
                 is_training = False)
-        predictions = end_points['Predictions']
 
-        names_to_values, names_to_updates = \
-                slim.metrics.aggregate_metric_map({ \
-                'eval/Accuracy': slim.metrics.streaming_accuracy(\
-                predictions, labels), \
-                'eval/Recall@5': slim.metrics.streaming_recall_at_k(\
-                logits, labels, 5)})
+        # specify the optimizer and create the train op
+        optimizer = tf.train.AdamOptimizer(learning_rate = lr)
+        train_op = slim.learning.create_train_op(\
+                total_loss, optimizer)
 
-        for metric_name, metric_value in metrics_to_values.iteritems():
-            tf.summary.scalar(metric_name, metric_value)
+        accuracy_train = slim.metrics.accuracy(\
+                    end_points_train['Predictions'], labels_train)
+        accuracy_test = slim.metrics.accuracy(\
+                    end_points_test['Predictions'], labels_test)
 
-        print 'Running evaluation loop ...'
-        num_evals = 10
-        eval_steps = 10
-        metric_values = slim.evaluation.evaluation_loop(\
-                master = '', \
-                checkpoint_dir = train_dir, \
+        # monitor the total loss
+        tf.summary.scalar('accuracy/train_accuracy', accuracy_train)
+        tf.summary.scalar('accuracy/test_accuracy', accuracy_test)
+
+        train_step_fn.step = 0
+        train_step_fn.accuracy_test = accuracy_test
+
+        # run the training
+        final_loss = slim.learning.train( \
+                train_op, \
                 logdir = train_dir, \
-                num_evals = num_evals, \
-                eval_op = names_to_updates.values(), \
-                summary_op = \
-                tf.contrib.deprecated.merge_summary(summary_ops), \
-                final_op = names_to_values.values(), \
-                max_number_of_evaluations = eval_steps, \
-                eval_interval_secs = 10)
-
-        names_to_values = \
-                dict(zip(names_to_values.keys(), metric_values))
-        for name in names_to_values:
-            print '{}: {}'.format(name, names_to_values[name])
-
-    else: 
-        print 'Wrong running mode. Must be train or test.'
+                train_step_fn = train_step_fn, \
+                number_of_steps = epochs, \
+                save_summaries_secs = 1)
