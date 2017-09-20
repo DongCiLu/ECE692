@@ -20,7 +20,7 @@ with tf.Graph().as_default():
 
     dataset = cifar10.get_split('test', data_dirname)
     images, labels = load_batch(dataset, \
-            batch_size = batch_size, epochs = epochs)
+            batch_size = batch_size)
 
     logits, end_points = leNet(images, \
             n_class = dataset.num_classes, \
