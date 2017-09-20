@@ -6,7 +6,7 @@ with tf.Graph().as_default():
     train_dir = 'tensorflow_log_lenet'
     data_dirname = 'cifar10'
 
-    dataset = cifar10.get_slit('test', data_dirname)
+    dataset = cifar10.get_split('test', data_dirname)
     images, labels = load_batch(dataset, \
             batch_size = batch_size, epochs = epochs)
 
