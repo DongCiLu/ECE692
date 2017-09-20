@@ -59,7 +59,7 @@ def leNet(images, n_class=10, \
 if __name__ == '__main__':
     train_dir = 'tensorflow_log_lenet'
     data_dirname = 'cifar10'
-    lr = 0.01
+    lr = 0.0001
     epochs = 1000
     batch_size = 128
 
@@ -121,15 +121,22 @@ if __name__ == '__main__':
                 'eval/Recall@5': slim.metrics.streaming_recall_at_k(\
                 logits, labels, 5)})
 
+        for metric_name, metric_value in metrics_to_values.iteritems():
+            tf.summary.scalar(metric_name, metric_value)
+
         print 'Running evaluation loop ...'
         num_evals = 10
+        eval_steps = 10
         metric_values = slim.evaluation.evaluation_loop(\
                 master = '', \
                 checkpoint_dir = train_dir, \
                 logdir = train_dir, \
                 num_evals = num_evals, \
                 eval_op = names_to_updates.values(), \
+                summary_op = \
+                tf.contrib,deprecated.merge_summary(summary_ops), \
                 final_op = names_to_values.values(), \
+                max_number_of_evaluations = eval_steps, \
                 eval_interval_secs = 10)
 
         names_to_values = \
@@ -139,4 +146,3 @@ if __name__ == '__main__':
 
     else: 
         print 'Wrong running mode. Must be train or test.'
-
