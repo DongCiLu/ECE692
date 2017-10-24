@@ -9,6 +9,12 @@ from yadlt.utils import datasets, utilities
 import denoising_autoencoder
 import conv_net
 
+# import sklearn
+from sklearn import cross_validation, grid_search
+from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.svm import SVC
+from sklearn.externals import joblib
+
 def generate_feature_sets(dataset_dir, fs1_filename, fs2_filename):
     # utilities.random_seed_np_tf(FLAGS.seed)
     utilities.random_seed_np_tf(-1)
@@ -46,6 +52,7 @@ def generate_feature_sets(dataset_dir, fs1_filename, fs2_filename):
     trX, trY, teX, teY = datasets.load_cifar10_dataset(cifar_dir, mode='supervised')
     trY = np.array(utilities.to_one_hot(trY))
     teY = np.array(teY)
+    teY_non_one_hot = teY[5000:]
     teY = np.array(utilities.to_one_hot(teY))
     # first half test set is validation set
     vlX = teX[:5000]
@@ -69,7 +76,7 @@ def generate_feature_sets(dataset_dir, fs1_filename, fs2_filename):
     feature_set_1 = dae.extract_features(teX)
     fs1_file = open(fs1_filename, 'wb')
     pickle.dump(feature_set_1, fs1_file)
-    pickle.dump(teY, fs1_file)
+    pickle.dump(teY_non_one_hot, fs1_file)
     fs1_file.close()
     
     # define Convolutional Network
@@ -86,7 +93,7 @@ def generate_feature_sets(dataset_dir, fs1_filename, fs2_filename):
     feature_set_2 = cnn.extract_features(teX)
     fs2_file = open(fs2_filename, 'wb')
     pickle.dump(feature_set_2,  fs2_file)
-    pickle.dump(teY, fs2_file)
+    pickle.dump(teY_non_one_hot, fs2_file)
     fs1_file.close()
     
 def load_feature_sets(fs1_filename, fs2_filename):
@@ -121,6 +128,9 @@ if __name__ == '__main__':
         print(feature_set_1.shape)
         print(feature_set_2.shape)
         print(labels.shape)
+        
+        svm = SVC()
+        
 
 
     
