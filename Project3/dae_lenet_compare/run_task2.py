@@ -10,6 +10,7 @@ import denoising_autoencoder
 import conv_net
 
 from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
 
 def generate_feature_sets(dataset_dir, fs_filename, tr_size):
     # utilities.random_seed_np_tf(FLAGS.seed)
@@ -132,11 +133,25 @@ if __name__ == '__main__':
         print(train_labels.shape)
         print(test_labels.shape)
         print(feature_train_set_1.shape)
-        print(feature_test_set_1.shape)
+        print(feature_test_set_1.shape) 
         print(feature_train_set_2.shape)
         print(feature_test_set_2.shape)
         
-        svm = SVC()
+        svm1 = SVC()
+        svm2 = SVC()
+        
+        svm1.fit(feature_train_set_1, train_labels)
+        svm2.fit(feature_train_set_2, train_labels)
+        
+        test_result_1 = svm1.predict(feature_test_set_1)
+        test_result_2 = svm2.predict(feature_test_set_2)
+        
+        accuracy1 = accuracy_score(test_labels, test_result_1)
+        accuracy2 = accuracy_score(test_labels, test_result_2)
+        
+        print("accuracy for model 1: {}".format(accuracy1))
+        print("accuracy for model 2: {}".format(accuracy2))
+        
         
 
 
