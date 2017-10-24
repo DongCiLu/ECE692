@@ -11,7 +11,7 @@ import conv_net
 
 from sklearn.svm import SVC
 
-def generate_feature_sets(dataset_dir, fs_filename):
+def generate_feature_sets(dataset_dir, fs_filename, tr_size):
     # utilities.random_seed_np_tf(FLAGS.seed)
     utilities.random_seed_np_tf(-1)
     
@@ -46,6 +46,9 @@ def generate_feature_sets(dataset_dir, fs_filename):
     
     # loading data
     trX, trY, teX, teY = datasets.load_cifar10_dataset(cifar_dir, mode='supervised')
+    # due to the memory limit, cannot use the whole training set
+    trX = trX[:tr_size]
+    trY = trY[:tr_size]
     trY_non_one_hot = trY
     trY = np.array(utilities.to_one_hot(trY))
     teY = np.array(teY)
@@ -74,8 +77,8 @@ def generate_feature_sets(dataset_dir, fs_filename):
     dae.fit(trX, trX, vlX, vlX) # unsupervised learning
     
     feature_train_set_1 = dae.extract_features(trX)
-    feature_test_set_1 = dae.extract_features(teX)
     pickle.dump(feature_train_set_1, fs_file)
+    feature_test_set_1 = dae.extract_features(teX)
     pickle.dump(feature_test_set_1, fs_file)
     
     # define Convolutional Network
@@ -90,8 +93,8 @@ def generate_feature_sets(dataset_dir, fs_filename):
     cnn.fit(trX, trY, vlX, vlY)  # supervised learning
     
     feature_train_set_2 = cnn.extract_features(trX)
-    feature_test_set_2 = cnn.extract_features(teX)
     pickle.dump(feature_train_set_2,  fs_file)
+    feature_test_set_2 = cnn.extract_features(teX)
     pickle.dump(feature_test_set_2,  fs_file)
     fs_file.close()
     
@@ -111,6 +114,7 @@ def load_feature_sets(fs_filename):
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('mode', type=str)
+    arg_parser.add_argument('--tr_size', type=int, default=10000, required=False)
     args = arg_parser.parse_args()
     
     assert args.mode in ['generate', 'classify']
@@ -119,7 +123,7 @@ if __name__ == '__main__':
     fs_filename = 'feature_sets.pkl'
     
     if args.mode == 'generate':
-        generate_feature_sets(dataset_dir, fs_filename)
+        generate_feature_sets(dataset_dir, fs_filename, args.tr_size)
         
     elif args.mode == 'classify':
         train_labels, test_labels, feature_train_set_1, \
