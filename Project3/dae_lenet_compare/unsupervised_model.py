@@ -144,3 +144,14 @@ class UnsupervisedModel(Model):
                     self.keep_prob: 1
                 }
                 return self.cost.eval(feed)
+                
+    def extract_features(self, data):
+        # extract features from the convolutional layers
+        with self.tf_graph.as_default():
+            with tf.Session() as self.tf_session:
+                self.tf_saver.restore(self.tf_session, self.model_path)
+                feed = {
+                    self.input_data: data,
+                    self.keep_prob: 1
+                }
+                return self.output_feature_map.eval(feed)

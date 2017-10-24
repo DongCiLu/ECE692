@@ -264,6 +264,8 @@ class DenoisingAutoencoder(UnsupervisedModel):
                 self.encode = self.enc_act_func(activation)
             else:
                 self.encode = activation
+                
+            self.output_feature_map = self.encode
 
             return self
 

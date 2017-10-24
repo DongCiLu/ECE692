@@ -223,6 +223,8 @@ class ConvolutionalNetwork(SupervisedModel):
                     print("The shape of the *** after flatten: {}"
                         .format(h_pool_flat.get_shape()))
                         
+                    self.output_feature_map = h_pool_flat
+                        
                     h_fc = tf.nn.relu(tf.add(
                         tf.matmul(h_pool_flat, W_fc),
                         b_fc))
@@ -232,6 +234,7 @@ class ConvolutionalNetwork(SupervisedModel):
                     next_layer_feed = h_fc_drop
 
                     first_full = False
+
 
                 else:  # not first fully connected layer
 
