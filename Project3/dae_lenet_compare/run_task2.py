@@ -9,7 +9,6 @@ from yadlt.utils import datasets, utilities
 import denoising_autoencoder
 import conv_net
 
-# import sklearn
 from sklearn.svm import SVC
 
 def generate_feature_sets(dataset_dir, fs_filename):
@@ -57,6 +56,9 @@ def generate_feature_sets(dataset_dir, fs_filename):
     vlY = teY[:5000]
     teX = teX[5000:]
     teY = teY[5000:]
+    fs_file = open(fs_filename, 'wb')
+    pickle.dump(trY_non_one_hot, fs_file)
+    pickle.dump(teY_non_one_hot, fs_file)
     
     # define Denoising Autoencoder
     dae = denoising_autoencoder.DenoisingAutoencoder(
@@ -73,10 +75,8 @@ def generate_feature_sets(dataset_dir, fs_filename):
     
     feature_train_set_1 = dae.extract_features(trX)
     feature_test_set_1 = dae.extract_features(teX)
-    fs1_file = open(fs1_filename, 'wb')
-    pickle.dump(feature_test_set_1, fs1_file)
-    pickle.dump(teY_non_one_hot, fs1_file)
-    fs1_file.close()
+    pickle.dump(feature_train_set_1, fs_file)
+    pickle.dump(feature_test_set_1, fs_file)
     
     # define Convolutional Network
     cnn = conv_net.ConvolutionalNetwork(
@@ -89,20 +89,24 @@ def generate_feature_sets(dataset_dir, fs_filename):
     print('Start Convolutional Network training...')
     cnn.fit(trX, trY, vlX, vlY)  # supervised learning
     
-    feature_set_2 = cnn.extract_features(teX)
-    fs2_file = open(fs2_filename, 'wb')
-    pickle.dump(feature_set_2,  fs2_file)
-    pickle.dump(teY_non_one_hot, fs2_file)
-    fs1_file.close()
+    feature_train_set_2 = cnn.extract_features(trX)
+    feature_test_set_2 = cnn.extract_features(teX)
+    pickle.dump(feature_train_set_2,  fs_file)
+    pickle.dump(feature_test_set_2,  fs_file)
+    fs_file.close()
     
 def load_feature_sets(fs_filename):
     fs_file = open(fs_filename, 'rb')
-    feature_set_1 = pickle.load(fs_file)
-    feature_set_2 = pickle.load(fs_file)
-    labels = pickle.load(fs_file)
+    train_labels = pickle.load(fs_file)
+    test_labels = pickle.load(fs_file)
+    feature_train_set_1 = pickle.load(fs_file)
+    feature_test_set_1 = pickle.load(fs_file)
+    feature_train_set_2 = pickle.load(fs_file)
+    feature_test_set_2 = pickle.load(fs_file)
     fs_file.close()
     
-    return feature_set_1, feature_set_2, labels
+    return train_labels, test_labels, feature_train_set_1, \
+            feature_test_set_1, feature_train_set_2, feature_test_set_2
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser()
@@ -112,17 +116,21 @@ if __name__ == '__main__':
     assert args.mode in ['generate', 'classify']
     
     dataset_dir = 'cifar10'
-    fs1_filename = 'feature_sets.pkl'
+    fs_filename = 'feature_sets.pkl'
     
     if args.mode == 'generate':
         generate_feature_sets(dataset_dir, fs_filename)
         
     elif args.mode == 'classify':
-        feature_set_1, feature_set_2, labels = \
-                load_feature_sets(fs_filename)
-        print(feature_set_1.shape)
-        print(feature_set_2.shape)
-        print(labels.shape)
+        train_labels, test_labels, feature_train_set_1, \
+                feature_test_set_1, feature_train_set_2, feature_test_set_2 \
+                = load_feature_sets(fs_filename)
+        print(train_labels.shape)
+        print(test_labels.shape)
+        print(feature_train_set_1.shape)
+        print(feature_test_set_1.shape)
+        print(feature_train_set_2.shape)
+        print(feature_test_set_2.shape)
         
         svm = SVC()
         
