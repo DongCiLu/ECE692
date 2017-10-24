@@ -10,12 +10,9 @@ import denoising_autoencoder
 import conv_net
 
 # import sklearn
-from sklearn import cross_validation, grid_search
-from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.svm import SVC
-from sklearn.externals import joblib
 
-def generate_feature_sets(dataset_dir, fs1_filename, fs2_filename):
+def generate_feature_sets(dataset_dir, fs_filename):
     # utilities.random_seed_np_tf(FLAGS.seed)
     utilities.random_seed_np_tf(-1)
     
@@ -50,6 +47,7 @@ def generate_feature_sets(dataset_dir, fs1_filename, fs2_filename):
     
     # loading data
     trX, trY, teX, teY = datasets.load_cifar10_dataset(cifar_dir, mode='supervised')
+    trY_non_one_hot = trY
     trY = np.array(utilities.to_one_hot(trY))
     teY = np.array(teY)
     teY_non_one_hot = teY[5000:]
@@ -73,9 +71,10 @@ def generate_feature_sets(dataset_dir, fs1_filename, fs2_filename):
     print('Start Denoising Autoencoder training...')
     dae.fit(trX, trX, vlX, vlX) # unsupervised learning
     
-    feature_set_1 = dae.extract_features(teX)
+    feature_train_set_1 = dae.extract_features(trX)
+    feature_test_set_1 = dae.extract_features(teX)
     fs1_file = open(fs1_filename, 'wb')
-    pickle.dump(feature_set_1, fs1_file)
+    pickle.dump(feature_test_set_1, fs1_file)
     pickle.dump(teY_non_one_hot, fs1_file)
     fs1_file.close()
     
@@ -96,15 +95,12 @@ def generate_feature_sets(dataset_dir, fs1_filename, fs2_filename):
     pickle.dump(teY_non_one_hot, fs2_file)
     fs1_file.close()
     
-def load_feature_sets(fs1_filename, fs2_filename):
-    fs1_file = open(fs1_filename, 'rb')
-    feature_set_1 = pickle.load(fs1_file)
-    fs1_file.close()
-    
-    fs2_file = open(fs2_filename, 'rb')
-    feature_set_2 = pickle.load(fs2_file)
-    labels = pickle.load(fs2_file)
-    fs2_file.close()
+def load_feature_sets(fs_filename):
+    fs_file = open(fs_filename, 'rb')
+    feature_set_1 = pickle.load(fs_file)
+    feature_set_2 = pickle.load(fs_file)
+    labels = pickle.load(fs_file)
+    fs_file.close()
     
     return feature_set_1, feature_set_2, labels
 
@@ -116,15 +112,14 @@ if __name__ == '__main__':
     assert args.mode in ['generate', 'classify']
     
     dataset_dir = 'cifar10'
-    fs1_filename = 'feature_set_1.pkl'
-    fs2_filename = 'feature_set_2.pkl'
+    fs1_filename = 'feature_sets.pkl'
     
     if args.mode == 'generate':
-        generate_feature_sets(dataset_dir, fs1_filename, fs2_filename)
+        generate_feature_sets(dataset_dir, fs_filename)
         
     elif args.mode == 'classify':
         feature_set_1, feature_set_2, labels = \
-                load_feature_sets(fs1_filename, fs2_filename)
+                load_feature_sets(fs_filename)
         print(feature_set_1.shape)
         print(feature_set_2.shape)
         print(labels.shape)
