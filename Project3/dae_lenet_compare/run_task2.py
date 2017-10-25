@@ -111,6 +111,31 @@ def load_feature_sets(fs_filename):
     
     return train_labels, test_labels, feature_train_set_1, \
             feature_test_set_1, feature_train_set_2, feature_test_set_2
+            
+def classify_with_svm(train_labels, test_labels, feature_train_set_1, \
+            feature_test_set_1, feature_train_set_2, feature_test_set_2) :
+        
+        svm1 = SVC()
+        svm2 = SVC()
+        
+        saved_train_size = train_labels.shape[0]
+        total_step = 10
+        
+        for step in range(total_step):
+            batch_train_size = int(saved_train_size / total_step * (step + 1))
+            
+            svm1.fit(feature_train_set_1[:batch_train_size], 
+                    train_labels[:batch_train_size])
+            svm2.fit(feature_train_set_2[:batch_train_size], 
+                    train_labels[:batch_train_size])
+            
+            test_result_1 = svm1.predict(feature_test_set_1)
+            test_result_2 = svm2.predict(feature_test_set_2)
+            
+            accuracy1 = accuracy_score(test_labels, test_result_1)
+            accuracy2 = accuracy_score(test_labels, test_result_2)
+            
+            print("{}, {}".format(accuracy1, accuracy2))
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser()
@@ -130,27 +155,9 @@ if __name__ == '__main__':
         train_labels, test_labels, feature_train_set_1, \
                 feature_test_set_1, feature_train_set_2, feature_test_set_2 \
                 = load_feature_sets(fs_filename)
-        print(train_labels.shape)
-        print(test_labels.shape)
-        print(feature_train_set_1.shape)
-        print(feature_test_set_1.shape) 
-        print(feature_train_set_2.shape)
-        print(feature_test_set_2.shape)
         
-        svm1 = SVC()
-        svm2 = SVC()
-        
-        svm1.fit(feature_train_set_1, train_labels)
-        svm2.fit(feature_train_set_2, train_labels)
-        
-        test_result_1 = svm1.predict(feature_test_set_1)
-        test_result_2 = svm2.predict(feature_test_set_2)
-        
-        accuracy1 = accuracy_score(test_labels, test_result_1)
-        accuracy2 = accuracy_score(test_labels, test_result_2)
-        
-        print("accuracy for model 1: {}".format(accuracy1))
-        print("accuracy for model 2: {}".format(accuracy2))
+        classify_with_svm(train_labels, test_labels, feature_train_set_1, \
+                feature_test_set_1, feature_train_set_2, feature_test_set_2)
         
         
 
