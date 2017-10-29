@@ -119,10 +119,12 @@ def classify_with_svm(train_labels, test_labels, feature_train_set_1, \
         svm2 = SVC()
         
         saved_train_size = train_labels.shape[0]
-        total_step = 10
+        # total_step = 10
+        total_step = 1
         
         for step in range(total_step):
-            batch_train_size = int(saved_train_size / total_step * (step + 1))
+            # batch_train_size = int(saved_train_size / total_step * (step + 1))
+            batch_train_size = saved_train_size
             
             svm1.fit(feature_train_set_1[:batch_train_size], 
                     train_labels[:batch_train_size])
