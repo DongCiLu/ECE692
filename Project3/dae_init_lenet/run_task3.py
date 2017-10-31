@@ -4,10 +4,9 @@ import tensorflow as tf
 # from yadlt.models.autoencoders import denoising_autoencoder
 # from yadlt.models.convolutional import conv_net
 from yadlt.utils import datasets, utilities
-import denoising_autoencoder
 import conv_net
 
-def dae_init_cnn(dataset_dir):
+def run_cnn(dataset_dir):
     # utilities.random_seed_np_tf(FLAGS.seed)
     utilities.random_seed_np_tf(-1)
     
@@ -16,19 +15,6 @@ def dae_init_cnn(dataset_dir):
     num_epochs = 3
     batch_size = 64
     n_classes = 10
-    
-    # parameters for dae
-    name_dae = 'dae'
-    n_components_dae = 1024
-    enc_act_func_dae = tf.nn.sigmoid
-    dec_act_func_dae = tf.nn.sigmoid
-    corr_type_dae = 'masking'
-    corr_frac_dae = 0.5
-    loss_func_dae = 'cross_entropy'
-    opt_dae = 'momentum'
-    regcoef_dae = 5e-4
-    learning_rate_dae = 0.05
-    momentum_dae = 0.9
     
     # parameters for cnn
     name_cnn = 'cnn'
@@ -39,8 +25,9 @@ def dae_init_cnn(dataset_dir):
     learning_rate_cnn = 1e-4
     momentum_cnn = 0.5 # not used
     dropout_cnn = 0.5
+    batch_norm = True
     
-    # loading data
+    # prepare data
     trX, trY, teX, teY = datasets.load_cifar10_dataset(cifar_dir, mode='supervised')
     # due to the memory limit, cannot use the whole training set
     trY_non_one_hot = trY
@@ -54,28 +41,13 @@ def dae_init_cnn(dataset_dir):
     teX = teX[5000:]
     teY = teY[5000:]
     
-    # define Denoising Autoencoder
-    # dae = denoising_autoencoder.DenoisingAutoencoder(
-        # name=name_dae, n_components=n_components_dae,
-        # enc_act_func=enc_act_func_dae, dec_act_func=dec_act_func_dae,
-        # corr_type=corr_type_dae, corr_frac=corr_frac_dae,
-        # loss_func=loss_func_dae, opt=opt_dae, regcoef=regcoef_dae,
-        # learning_rate=learning_rate_dae, momentum=momentum_dae,
-        # num_epochs=num_epochs, batch_size=batch_size
-    # )
-
-    # print('Start Denoising Autoencoder training...')
-    # dae.fit(trX, trX, vlX, vlX) # unsupervised learning
-    # weights = dae.extract_weights()
-    weights = []
-    
     # define Convolutional Network
     cnn = conv_net.ConvolutionalNetwork(
         original_shape=[int(i) for i in original_shape_cnn.split(',')],
         layers=layers_cnn, name=name_cnn, loss_func=loss_func_cnn,
         num_epochs=num_epochs, batch_size=batch_size, opt=opt_cnn,
         learning_rate=learning_rate_cnn, momentum=momentum_cnn, dropout=dropout_cnn,
-        pre_W = weights
+        batch_norm = batch_norm
     )
     
     print('Start Convolutional Network training...')
@@ -83,4 +55,4 @@ def dae_init_cnn(dataset_dir):
     
 if __name__ == '__main__':
     dataset_dir = 'cifar10'
-    dae_init_cnn(dataset_dir)
+    run_cnn(dataset_dir)

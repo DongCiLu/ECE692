@@ -22,7 +22,7 @@ class ConvolutionalNetwork(SupervisedModel):
     def __init__(
         self, layers, original_shape, name='convnet',
         loss_func='softmax_cross_entropy', num_epochs=10, batch_size=10,
-            opt='sgd', learning_rate=0.01, momentum=0.5, dropout=0.5, pre_W=None):
+            opt='sgd', learning_rate=0.01, momentum=0.5, dropout=0.5, batch_norm=False):
         """Constructor.
 
         :param layers: string used to build the model.
@@ -59,7 +59,7 @@ class ConvolutionalNetwork(SupervisedModel):
         self.original_shape = original_shape
         self.dropout = dropout
         
-        self.pre_W = pre_W
+        self.batch_norm = batch_norm
 
         self.W_vars = None
         self.B_vars = None
@@ -175,9 +175,11 @@ class ConvolutionalNetwork(SupervisedModel):
                 self.B_vars.append(b_conv)
 
                 # Convolution and Activation function
-                h_conv = tf.nn.relu(
+                h_conv_before_bn = tf.nn.relu(
                     self.conv2d(next_layer_feed, W_conv, stride) + b_conv)
-
+                
+                h_conv = h_conv_before_bn
+                    
                 # keep track of the number of output dims of the previous layer
                 prev_output_dim = feature_maps
                 # output node of the last layer

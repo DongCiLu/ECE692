@@ -57,6 +57,7 @@ class SupervisedModel(Model):
             raise Exception("Please convert the labels with one-hot encoding.")
 
         g = graph if graph is not None else self.tf_graph
+        print(train_X.shape, train_Y.shape)
 
         with g.as_default():
             # Build model
