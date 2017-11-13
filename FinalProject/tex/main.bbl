@@ -1,0 +1,101 @@
+\begin{thebibliography}{10}
+
+\bibitem{ahsan2017towards}
+U.~Ahsan, M.~De~Choudhury, and I.~Essa.
+\newblock Towards using visual attributes to infer image sentiment of social
+  events.
+\newblock In {\em Neural Networks (IJCNN), 2017 International Joint Conference
+  on}, pages 1372--1379. IEEE, 2017.
+
+\bibitem{asur2010predicting}
+S.~Asur and B.~A. Huberman.
+\newblock Predicting the future with social media.
+\newblock In {\em Web Intelligence and Intelligent Agent Technology (WI-IAT),
+  2010 IEEE/WIC/ACM International Conference on}, volume~1, pages 492--499.
+  IEEE, 2010.
+
+\bibitem{borth2013large}
+D.~Borth, R.~Ji, T.~Chen, T.~Breuel, and S.-F. Chang.
+\newblock Large-scale visual sentiment ontology and detectors using adjective
+  noun pairs.
+\newblock In {\em Proceedings of the 21st ACM international conference on
+  Multimedia}, pages 223--232. ACM, 2013.
+
+\bibitem{campos2017pixels}
+V.~Campos, B.~Jou, and X.~Giro-i Nieto.
+\newblock From pixels to sentiment: Fine-tuning cnns for visual sentiment
+  prediction.
+\newblock {\em Image and Vision Computing}, 2017.
+
+\bibitem{chen2014deepsentibank}
+T.~Chen, D.~Borth, T.~Darrell, and S.-F. Chang.
+\newblock Deepsentibank: Visual sentiment concept classification with deep
+  convolutional neural networks.
+\newblock {\em arXiv preprint arXiv:1410.8586}, 2014.
+
+\bibitem{he2016deep}
+K.~He, X.~Zhang, S.~Ren, and J.~Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In {\em Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pages 770--778, 2016.
+
+\bibitem{jou2015visual}
+B.~Jou, T.~Chen, N.~Pappas, M.~Redi, M.~Topkara, and S.-F. Chang.
+\newblock Visual affect around the world: A large-scale multilingual visual
+  sentiment ontology.
+\newblock In {\em Proceedings of the 23rd ACM international conference on
+  Multimedia}, pages 159--168. ACM, 2015.
+
+\bibitem{krizhevsky2012imagenet}
+A.~Krizhevsky, I.~Sutskever, and G.~E. Hinton.
+\newblock Imagenet classification with deep convolutional neural networks.
+\newblock In {\em Advances in neural information processing systems}, pages
+  1097--1105, 2012.
+
+\bibitem{o2010tweets}
+B.~O'Connor, R.~Balasubramanyan, B.~R. Routledge, and N.~A. Smith.
+\newblock From tweets to polls: Linking text sentiment to public opinion time
+  series.
+\newblock {\em ICWSM}, 11(122-129):1--2, 2010.
+
+\bibitem{simonyan2014very}
+K.~Simonyan and A.~Zisserman.
+\newblock Very deep convolutional networks for large-scale image recognition.
+\newblock {\em arXiv preprint arXiv:1409.1556}, 2014.
+
+\bibitem{soleymani2017survey}
+M.~Soleymani, D.~Garcia, B.~Jou, B.~Schuller, S.-F. Chang, and M.~Pantic.
+\newblock A survey of multimodal sentiment analysis.
+\newblock {\em Image and Vision Computing}, 65:3--14, 2017.
+
+\bibitem{szegedy2015going}
+C.~Szegedy, W.~Liu, Y.~Jia, P.~Sermanet, S.~Reed, D.~Anguelov, D.~Erhan,
+  V.~Vanhoucke, and A.~Rabinovich.
+\newblock Going deeper with convolutions.
+\newblock In {\em Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pages 1--9, 2015.
+
+\bibitem{vinyals2015show}
+O.~Vinyals, A.~Toshev, S.~Bengio, and D.~Erhan.
+\newblock Show and tell: A neural image caption generator.
+\newblock In {\em Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pages 3156--3164, 2015.
+
+\bibitem{wang2015unsupervised}
+Y.~Wang, S.~Wang, J.~Tang, H.~Liu, and B.~Li.
+\newblock Unsupervised sentiment analysis for social media images.
+\newblock In {\em IJCAI}, pages 2378--2379, 2015.
+
+\bibitem{you2015robust}
+Q.~You, J.~Luo, H.~Jin, and J.~Yang.
+\newblock Robust image sentiment analysis using progressively trained and
+  domain transferred deep networks.
+\newblock In {\em AAAI}, pages 381--388, 2015.
+
+\bibitem{yuan2013sentribute}
+J.~Yuan, S.~Mcdonough, Q.~You, and J.~Luo.
+\newblock Sentribute: image sentiment analysis from a mid-level perspective.
+\newblock In {\em Proceedings of the Second International Workshop on Issues of
+  Sentiment Discovery and Opinion Mining}, page~10. ACM, 2013.
+
+\end{thebibliography}

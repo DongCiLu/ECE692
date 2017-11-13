@@ -1,0 +1,24 @@
+\section{Related Works}
+\label{relatedwork} 
+
+\note{simply write down what did each paper do for now}
+
+The majority of work in image sentiment analysis focus on ... .
+
+\cite{borth2013large} trys to fill in the "affective gap" between the low-level features and the high-level sentiment by a set of mid-level representation called visual sentiment ontology that consist of more than 3,000 Adjective Noun Pairs (ANP) such as "beautiful flower" or "disgusting food". The authors also publish a large-scale dataset called SentiBank that is widely used in later works. They also extends their work into a multilingual settings in one of their later work \cite{jou2015visual}. 
+
+\cite{you2015robust} applies CNN to image sentiment analysis. They propose a method to progressively training CNNs by keep training instances with distinct sentiment scores towards sentiment polars and discard training instances otherwise.
+
+\cite{yuan2013sentribute} adopts a similar methodology as \cite{borth2013large}. The authors also construct a mid-level attributes for better classification except that they choose different scene-based mid-level attributes than \cite{borth2013large}. In addition to that, they also include face detection to enhance the performance on images containing human face.
+
+\note{the challenge of collecting data: not only the image need to be manually labeled, but also each image normally require multiple people to label it as it is very common for people to have different opinion on a same image. In the end, only a portion of the labeled data can be used, for example, images with all 5 annotator agree on the sentiment label.}
+
+Due to the challenge in manually collect labeled data for image sentiment analysis, \cite{wang2015unsupervised} proposes an unsupervised method to facilitate social media images sentiment analysis with textual information associated with each image.
+
+\cite{chen2014deepsentibank} try to apply CNN based on AlexNet \cite{krizhevsky2012imagenet} to automaticall extract features based on ANPs proposed in \cite{borth2013large}.
+
+\cite{ahsan2017towards} studies the sentiment analysis of images of social events. It designs specific mid-level representations of each event class and classify sentiment of each image without the help of texts associated with the image.
+
+\cite{campos2017pixels} studies how to fine-tune AlexNet-styled CNNs to achieve better performance on image sentiment analysis tasks.
+
+Our work falls into the category of ... .
